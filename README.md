@@ -68,5 +68,5 @@ uvicorn pkg:app --host 0.0.0.0 --port 8000 --reload
 
 ### 📌 Map Visualization for Job Openings
 
--   Use **Leaflet.js** or **Google Maps API** to display job postings.
+-   Use **geo/map** or **Google Maps API** to display job postings.
 -   **Color-code** locations based on job demand in each city/state.
