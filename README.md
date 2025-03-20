@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,3 +91,6 @@ venv\Scripts\activate</code></pre>
     </div>
 </body>
 </html>
+=======
+
+
