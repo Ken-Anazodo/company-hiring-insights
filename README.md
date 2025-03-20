@@ -1,4 +1,4 @@
-<p>Instructions to Start the Python Web App from a GitHub Repo</p>>
+<p>Instructions to Start the Python Web App from a GitHub Repo</p>
 <p>📌 Prerequisites</p>
 <p>Before you start, ensure you have the following installed:</p>
 
@@ -6,23 +6,25 @@
 FastAPI & Uvicorn (Will be installed in steps below)</p>
 
 STEPS:
-<p>1.CLONE THE REPOSITORY:</p>
+<ul>
+<li>1.CLONE THE REPOSITORY:</li>
   <p>git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git</p>
   <p>cd YOUR_REPO</p>
 
-<p>2.Create a Virtual Environment
-  On Linux/macOS: </p>
-  <p>python3 -m venv venv
-  source venv/bin/activate </p>
+<li>2.Create a Virtual Environment
+  <p>On Linux/macOS: </p>
+  <p>python3 -m venv venv</p>
+  <p>source venv/bin/activate</p> </li>
 
-  <p>On Windows (CMD):
-  python -m venv venv
-  venv\Scripts\activate</p>
+  <li>On Windows (CMD):
+  <p>python -m venv venv</p>
+ <p> venv\Scripts\activate</p></li>
 
-<p>3. Install Required Dependencies:
-   pip install -r requirements.txt</p>
+<li>3. Install Required Dependencies:
+  <p></p> pip install -r requirements.txt</p></li>
 
-<p>4.Run the FastAPI Server:
-  uvicorn pkg:app --host 0.0.0.0 --port 8000 --reload</p>
+<li>4.Run the FastAPI Server:
+  <p>uvicorn pkg:app --host 0.0.0.0 --port 8000 --reload</p></li>
+</ul>
    
 
