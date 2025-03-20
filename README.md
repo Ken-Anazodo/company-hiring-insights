@@ -2,8 +2,8 @@
 <p>📌 Prerequisites</p>
 <p>Before you start, ensure you have the following installed:</p>
 
-<p>Python 3.x (Check with python --version or python3 --version)
-FastAPI & Uvicorn (Will be installed in steps below)</p>
+<p>Python 3.x (Check with python --version or python3 --version)</p>
+<p>FastAPI & Uvicorn (Will be installed in steps below)</p>
 
 STEPS:
 <ul>
