@@ -1,14 +1,14 @@
-<p>Instructions to Start the Python Web App from a GitHub Repo
-📌 Prerequisites
-Before you start, ensure you have the following installed:</p>
+<p>Instructions to Start the Python Web App from a GitHub Repo</p>>
+<p>📌 Prerequisites</p>
+<p>Before you start, ensure you have the following installed:</p>
 
 <p>Python 3.x (Check with python --version or python3 --version)
 FastAPI & Uvicorn (Will be installed in steps below)</p>
 
 STEPS:
-<p>1.CLONE THE REPOSITORY:
-  git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-  cd YOUR_REPO
+<p>1.CLONE THE REPOSITORY:</p>
+  <p>git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git</p>
+  <p>cd YOUR_REPO</p>
 
 <p>2.Create a Virtual Environment
   On Linux/macOS: </p>
