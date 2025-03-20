@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <title>Company Hiring Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/map/js/world.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+</head>
+<body class="bg-gray-100">
+    <div class="dropdown-container flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-zinc-900 text-white p-4 space-y-6 overflow-hidden">
+            <h2 class="brand-name text-xl font-semibold">Mylane</h2>
+            <label for="company-select" class="block text-sm">Select a Company:</label>
+            <select id="company-select" class="text-black w-full p-2 rounded">
+                {% for name in company_names %}
+                    <option value="{{ name }}" {% if name == company_name %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        
+        <!-- Main Content -->
+        <main class="content-container flex-1 p-6 overflow-auto">
+            <h2 class="text-2xl font-semibold uppercase">{{ company_name }} Hiring Insights</h2>
+            <p class="mt-2"><strong>Industry:</strong> {{ industry }}</p>
+            <p><strong>Location:</strong> {{ location }}</p>
+            <p><strong>Founded:</strong> {{ founded }}</p>
+            <p><strong>Website:</strong> {{ website | lower }}</p>
+           
+
+
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-2 gap-6 mt-6">
+                <div class="bg-white p-4 shadow rounded">
+                    <h3 class="text-lg font-bold">Total Job Openings</h3>
+                    <p class="text-2xl font-semibold">{{ total_openings }}</p>
+                </div>
+
+                <div class="bg-white p-4 shadow rounded">
+                    <h3 class="text-lg font-bold">Total Cities with Job Postings</h3>
+                    <p class="text-2xl font-semibold">{{ total_cities_with_jobs }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 mt-6">
+                <div class="bg-white p-4 shadow rounded">
+                    <h3 class="text-lg font-bold">Top Roles & Median Salary</h3>
+                    <ul class="mt-2">
+                        {% for role in top_roles_salary %}
+                            <li class="text-sm">{{ role.job }}: <strong>${{ role.salary }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="bg-white p-4 shadow rounded">
+                    <h3 class="text-lg font-bold">Top Hiring States</h3>
+                    {% if top_hiring_states %}
+                        <ul class="mt-2">
+                            {% for state in top_hiring_states %}
+                                <li class="text-sm">{{ state.state }}: <strong>{{ state.value }}</strong></li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-sm text-gray-500">No hiring states available.</p>
+                    {% endif %}
+                </div>
+                
+            </div>  
+           
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 gap-6 mt-6">
+                <div id="roles-chart" class="h-80 bg-white p-4 shadow rounded"></div>
+                <div id="cities-chart" class="h-80 bg-white p-4 shadow rounded"></div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        var rolesData = {{ roles_data | tojson | safe }};
+        var citiesData = {{ cities_data | tojson | safe }};
+    </script>
+    <script src="{{ url_for('static', path='js/company_profile.js') }}"></script>
+</body>
+</html>
+
+
+

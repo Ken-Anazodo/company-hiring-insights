@@ -1,0 +1,22 @@
+body{
+	font-family: 'Poppins', sans-serif;
+}
+
+.dropdown-container{ 
+	font-style: normal;
+	font-weight: 300;
+	text-transform: capitalize;
+}
+
+.content-container{
+	font-family: 'Poppins', sans-serif;
+}
+
+
+main p{
+	font-size: 14px;
+}
+
+main p strong{
+	font-weight: 500;
+}
