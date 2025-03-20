@@ -7,11 +7,11 @@ FastAPI & Uvicorn (Will be installed in steps below)</p>
 
 STEPS:
 <ul>
-<li>1.CLONE THE REPOSITORY:</li>
+<li>CLONE THE REPOSITORY:</li>
   <p>git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git</p>
   <p>cd YOUR_REPO</p>
 
-<li>2.Create a Virtual Environment
+<li>Create a Virtual Environment
   <p>On Linux/macOS: </p>
   <p>python3 -m venv venv</p>
   <p>source venv/bin/activate</p> </li>
@@ -20,10 +20,10 @@ STEPS:
   <p>python -m venv venv</p>
  <p> venv\Scripts\activate</p></li>
 
-<li>3. Install Required Dependencies:
+<li>Install Required Dependencies:
   <p></p> pip install -r requirements.txt</p></li>
 
-<li>4.Run the FastAPI Server:
+<li>Run the FastAPI Server:
   <p>uvicorn pkg:app --host 0.0.0.0 --port 8000 --reload</p></li>
 </ul>
    
