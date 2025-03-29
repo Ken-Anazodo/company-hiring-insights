@@ -28,7 +28,7 @@ venv\Scripts\activate
 ### 3️⃣ Install Required Dependencies
 pip install -r requirements.txt
 ### 4️⃣ Run the FastAPI Server
-uvicorn pkg:app --host 0.0.0.0 --port 8000 --reload
+uvicorn pkg:app --host 127.0.0.1 --port 8000 --reload
 
 
 
