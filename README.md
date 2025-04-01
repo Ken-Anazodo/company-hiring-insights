@@ -30,6 +30,8 @@ pip install -r requirements.txt
 
 ### 4️⃣ Run the FastAPI Server
 uvicorn pkg:app --host 127.0.0.1 --port 8000 --reload
+Alternatively, you can open starter.py in your IDE and click the Run button.
+
 
 
 
