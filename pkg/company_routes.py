@@ -33,60 +33,66 @@ company_id_to_name = df_attr.set_index("company_id")["company_name"].to_dict()
 company_name_to_id = {v: k for k, v in company_id_to_name.items()}
 company_attr = df_attr.set_index("company_id").to_dict(orient="index")
 
+# Utility function to filter DataFrame
+def filter_df(df, company_id):
+    return df[df["company_id"] == company_id]
+
+
 def get_roles_data(company_id):
     """Get job roles distribution for a company."""
-    roles = df_role[df_role["company_id"] == company_id]
-    return [{"name": row["job_family"], "value": row["position_count"], "wage_median": row["wage_median"]} for _, row in roles.iterrows()]
-
+    roles = filter_df(df_role, company_id).loc[:, ["job_family", "position_count", "wage_median"]]
+    return roles.rename(columns={"job_family": "name", "position_count": "value"}).to_dict(orient="records")
 
 
 def get_cities_data(company_id):
     """Get job postings distribution by city for a company."""
-    df_city["company_id"] = df_city["company_id"].astype(str)  # Ensure company_id column is string
-    company_id = str(company_id)  
-    filtered_df = df_city[df_city["company_id"] == company_id]
-    return [{"name": row["city"], "value": row["position_count"]} for _, row in filtered_df.iterrows()]
+    filtered_df = filter_df(df_city, str(company_id))
+    return filtered_df.loc[:, ["city", "position_count"]].rename(columns={"city": "name", "position_count": "value"}).to_dict(orient="records")
 
 
 def get_total_job_openings(company_id):
     """Calculate total job openings for a company."""
-    return df_role[df_role["company_id"] == company_id]["position_count"].sum()
-
+    return filter_df(df_role, company_id)["position_count"].sum()
 
 
 def get_top_roles_salary(company_id, top_n=3):
     """Get top N job roles with highest median salary for a company."""
-    roles = df_role[df_role["company_id"] == company_id].sort_values(by="wage_median", ascending=False)
-    return [{"job": row["job_family"], "salary": row["wage_median"]} for _, row in roles.head(top_n).iterrows()]
-
+    roles = filter_df(df_role, company_id).nlargest(top_n, "wage_median")
+    return roles.loc[:, ["job_family", "wage_median"]].rename(columns={"job_family": "job", "wage_median": "salary"}).to_dict(orient="records")
 
 
 def get_top_hiring_states(company_id, top_n=3):
     """Get top states where the company has job postings."""
-    if "state_name" in df_city.columns:  # Correct column name
-        df_city["company_id"] = df_city["company_id"].astype(str)  # Ensure correct type
-        company_id = str(company_id)
-        state_totals = (df_city[df_city["company_id"] == company_id].groupby("state_name")["position_count"].sum().reset_index())
-        state_totals = state_totals.sort_values(by="position_count", ascending=False).head(top_n)
-        return [{"state": row["state_name"], "value": row["position_count"]} for _, row in state_totals.iterrows()]
+    if "state_name" in df_city.columns:
+        df_city["company_id"] = df_city["company_id"].astype(str)  # Ensure company_id is string
+        company_id = str(company_id)  # Convert input to string
+        filtered_df = filter_df(df_city, company_id)  # Use filter_df function
+
+        if filtered_df.empty:
+            return []  # Return empty list if no data is found
+        
+        state_totals = filtered_df.groupby("state_name", as_index=False)["position_count"].sum()
+
+        return (
+            state_totals.nlargest(min(top_n, len(state_totals)), "position_count")  # Prevent errors if fewer than top_n states exist
+            .rename(columns={"state_name": "state", "position_count": "value"})
+            .to_dict(orient="records")
+        )
+    
     return []
 
 
-def get_total_job_openings_by_city():
-    """Get total job openings by city (Which city has the highest demand?)."""
-    city_totals = df_city.groupby("city")["position_count"].sum().reset_index()
-    city_totals = city_totals.sort_values(by="position_count", ascending=False)
-    return [{"name": row["city"], "value": row["position_count"]} for _, row in city_totals.iterrows()]
 
+def get_total_job_openings_by_city():
+    """Get total job openings by city."""
+    city_totals = df_city.groupby("city", as_index=False)["position_count"].sum().nlargest(10, "position_count")
+    return city_totals.rename(columns={"position_count": "value"}).to_dict(orient="records")
 
 
 def get_total_job_openings_by_industry():
     """Get total job openings by industry."""
-    merged_df = df_role.merge(df_attr, on="company_id", how="left")
-    industry_totals = merged_df.groupby("industry_list")["position_count"].sum().reset_index()
-    industry_totals = industry_totals.sort_values(by="position_count", ascending=False)
-    return [{"industry": row["industry_list"], "value": row["position_count"]} for _, row in industry_totals.iterrows()]
-
+    industry_totals = df_role.merge(df_attr, on="company_id", how="left").groupby("industry_list", as_index=False)["position_count"].sum()
+    return industry_totals.nlargest(10, "position_count").rename(columns={"position_count": "value"}).to_dict(orient="records")
 
 
 def get_total_companies_hiring():
@@ -94,16 +100,11 @@ def get_total_companies_hiring():
     return df_attr["company_id"].nunique()
 
 
-
 def get_total_cities_with_job_postings(company_id):
     """Get the total number of unique cities with job postings for a company."""
-    df_city["company_id"] = df_city["company_id"].astype(str)  # Ensure company_id is string
-    company_id = str(company_id)  # Convert input to string
-    filtered_df = df_city[df_city["company_id"] == company_id]
-    total_cities = filtered_df["city"].nunique()
-    print(f"DEBUG: Company ID = {company_id}, Matching Rows = {len(filtered_df)}, Total Cities = {total_cities}")  # Debugging
+    total_cities = filter_df(df_city, str(company_id))["city"].nunique()
+    print(f"DEBUG: Company ID = {company_id}, Total Cities = {total_cities}")  # Debugging
     return total_cities
-
 
 
 @router.get("/company/{company_name}/", response_class=HTMLResponse)
@@ -126,8 +127,7 @@ def get_company_profile(request: Request, company_name: str):
     job_openings_by_industry = get_total_job_openings_by_industry()
     total_companies_hiring = get_total_companies_hiring()
     job_openings_by_city = get_total_job_openings_by_city()
-    print("DEBUG: Total cites:", json.dumps(total_cities_with_jobs))  # Debugging
-
+    print("DEBUG: Total cities:", json.dumps(total_cities_with_jobs))  # Debugging
 
     return templates.TemplateResponse("company_profile.html", {
         "request": request,
@@ -145,5 +145,5 @@ def get_company_profile(request: Request, company_name: str):
         "total_companies_hiring": total_companies_hiring,
         "job_openings_by_city": job_openings_by_city,
         "total_cities_with_jobs": total_cities_with_jobs,
-        "top_hiring_states" : top_hiring_states,
+        "top_hiring_states": top_hiring_states,
     })
